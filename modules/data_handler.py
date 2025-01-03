@@ -6,13 +6,7 @@ from datetime import datetime, timedelta
 @st.cache_data(ttl=3600)
 def fetch_stock_data(symbol: str, start_date, end_date, interval: str = "1d") -> pd.DataFrame:
     """
-    Fetch stock data from Yahoo Finance with caching
-
-    Interval options:
-    - 1m, 2m, 15m: Intraday data with limitations
-    - 1d: Daily data
-    - 1mo: Monthly data
-    - max: Maximum available history
+    Fetch stock data from Yahoo Finance with caching and proper handling of intraday data
     """
     try:
         # Convert dates to datetime if they're not already
@@ -21,45 +15,87 @@ def fetch_stock_data(symbol: str, start_date, end_date, interval: str = "1d") ->
         if not isinstance(end_date, datetime):
             end_date = datetime.combine(end_date, datetime.max.time())
 
-        # Handle special case for 'max' timeframe
+        # Handle special cases
         if interval == 'max':
-            interval = '1d'  # Use daily data for maximum history
+            interval = '1d'
+        elif interval == '3m':
+            # For 3min data, we'll fetch 1min data and resample it
+            return fetch_and_resample_three_min(symbol, start_date, end_date)
 
         # For intraday data, enforce date range limitations
         current_date = datetime.now()
         if interval == '1m':
-            # Yahoo finance only provides 7 days of 1-minute data
             max_days = 7
             start_date = max(start_date, current_date - timedelta(days=max_days))
-        elif interval in ['2m', '15m']:
-            # Limit other intraday data to 60 days
+        elif interval == '15m':
             max_days = 60
             start_date = max(start_date, current_date - timedelta(days=max_days))
 
         # Ensure end_date is not in the future
         end_date = min(end_date, current_date)
 
-        # Create Ticker object
+        # Create Ticker object and fetch data
         stock = yf.Ticker(symbol)
-
-        # Fetch historical data
         df = stock.history(
             start=start_date,
             end=end_date,
             interval=interval,
-            prepost=False  # Exclude pre/post market data for consistency
+            prepost=False
         )
 
         if df.empty:
             st.warning(f"No data available for {symbol} in the selected date range with {interval} interval.")
             return pd.DataFrame()
 
-        # Reset index to make date a column
+        # Reset index to make date a column and ensure proper datetime format
         df = df.reset_index()
+        df['Date'] = pd.to_datetime(df['Date'])
 
         return df
+
     except Exception as e:
         st.error(f"Error fetching data for {symbol}: {str(e)}")
+        return pd.DataFrame()
+
+def fetch_and_resample_three_min(symbol: str, start_date, end_date) -> pd.DataFrame:
+    """
+    Custom function to create 3-minute data by resampling 1-minute data
+    """
+    try:
+        # Fetch 1-minute data
+        stock = yf.Ticker(symbol)
+        df = stock.history(
+            start=start_date,
+            end=end_date,
+            interval='1m',
+            prepost=False
+        )
+
+        if df.empty:
+            st.warning(f"No data available for {symbol} in the selected date range for 3-minute intervals.")
+            return pd.DataFrame()
+
+        # Reset index to make date a column
+        df = df.reset_index()
+        df['Date'] = pd.to_datetime(df['Date'])
+
+        # Resample to 3-minute intervals
+        df.set_index('Date', inplace=True)
+        resampled = df.resample('3T').agg({
+            'Open': 'first',
+            'High': 'max',
+            'Low': 'min',
+            'Close': 'last',
+            'Volume': 'sum'
+        }).dropna()
+
+        # Reset index to make date a column again
+        resampled = resampled.reset_index()
+
+        return resampled
+
+    except Exception as e:
+        st.error(f"Error creating 3-minute data for {symbol}: {str(e)}")
         return pd.DataFrame()
 
 def cache_data(symbol: str, start_date, end_date, interval: str = "1d") -> pd.DataFrame:
@@ -75,9 +111,6 @@ def cache_data(symbol: str, start_date, end_date, interval: str = "1d") -> pd.Da
             if col not in df.columns:
                 st.error(f"Missing required column: {col}")
                 return pd.DataFrame()
-
-        # Convert date column to datetime if it isn't already
-        df['Date'] = pd.to_datetime(df['Date'])
 
         return df
     return pd.DataFrame()

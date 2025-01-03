@@ -11,9 +11,9 @@ def create_price_chart(df, symbol, support_resistance, trend_data, timeframe="1d
         rows=2,
         cols=1,
         shared_xaxes=True,
-        vertical_spacing=0.03,
+        vertical_spacing=0.1,  # Increased spacing between subplots
         subplot_titles=(f'{symbol} Price ({timeframe})', 'Volume'),
-        row_width=[0.7, 0.3]
+        row_width=[0.8, 0.2]  # Adjusted ratio between price and volume charts
     )
 
     # Add candlestick
@@ -106,17 +106,25 @@ def create_price_chart(df, symbol, support_resistance, trend_data, timeframe="1d
             col=1
         )
 
-    # Update layout
+    # Update layout with better spacing and dimensions
     fig.update_layout(
         xaxis_rangeslider_visible=False,
-        height=800,
+        height=900,  # Increased overall height
         showlegend=True,
         title_text=f"{symbol} Technical Analysis ({timeframe})",
+        title_x=0.5,  # Center the title
         yaxis_title="Price",
-        yaxis2_title="Volume"
+        yaxis2_title="Volume",
+        margin=dict(t=100, b=50),  # Adjusted margins
+        legend=dict(
+            yanchor="top",
+            y=0.99,
+            xanchor="left",
+            x=0.01
+        )
     )
 
-    # Update axes
+    # Update axes with better formatting
     fig.update_xaxes(showgrid=True, gridwidth=1, gridcolor='LightGrey')
     fig.update_yaxes(showgrid=True, gridwidth=1, gridcolor='LightGrey')
 

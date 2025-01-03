@@ -12,16 +12,17 @@ def main():
     st.sidebar.title("Settings")
     symbol = st.sidebar.text_input("Stock Symbol", value="AAPL").upper()
 
+    # Calculate default dates
     end_date = datetime.datetime.now()
     start_date = end_date - datetime.timedelta(days=365)
 
     # Updated timeframe selection with supported intervals
     timeframe = st.sidebar.selectbox(
         "Timeframe",
-        ["1m", "2m", "15m", "1d", "1mo", "max"],
+        ["1m", "3m", "15m", "1d", "1mo", "max"],
         index=3,
         help="1m = 1 Minute (last 7 days)\n"
-             "2m = 2 Minutes (last 60 days)\n"
+             "3m = 3 Minutes (last 60 days)\n"
              "15m = 15 Minutes (last 60 days)\n"
              "1d = Daily\n"
              "1mo = Monthly\n"
@@ -33,7 +34,7 @@ def main():
         # For 1-minute data, limit to last 7 days
         min_date = end_date - datetime.timedelta(days=7)
         start_date = max(start_date, min_date)
-    elif timeframe in ['2m', '15m']:
+    elif timeframe in ['3m', '15m']:
         # For intraday data, limit to last 60 days
         min_date = end_date - datetime.timedelta(days=60)
         start_date = max(start_date, min_date)
@@ -41,7 +42,7 @@ def main():
     date_range = st.sidebar.date_input(
         "Date Range",
         value=(start_date.date(), end_date.date()),
-        min_value=start_date.date() if timeframe in ['1m', '2m', '15m'] else None,
+        min_value=start_date.date() if timeframe in ['1m', '3m', '15m'] else None,
         max_value=end_date.date()
     )
 
@@ -50,6 +51,8 @@ def main():
 
     if len(date_range) == 2:
         start_date, end_date = date_range
+        start_date = datetime.datetime.combine(start_date, datetime.datetime.min.time())
+        end_date = datetime.datetime.combine(end_date, datetime.datetime.max.time())
 
         # Fetch and cache data
         with st.spinner("Fetching stock data..."):
