@@ -16,24 +16,25 @@ def fetch_stock_data(symbol: str, start_date, end_date, interval: str = "1d") ->
     """
     try:
         # Convert dates to datetime if they're not already
-        if isinstance(start_date, str):
-            start_date = datetime.strptime(start_date, "%Y-%m-%d")
-        if isinstance(end_date, str):
-            end_date = datetime.strptime(end_date, "%Y-%m-%d")
+        if not isinstance(start_date, datetime):
+            start_date = datetime.combine(start_date, datetime.min.time())
+        if not isinstance(end_date, datetime):
+            end_date = datetime.combine(end_date, datetime.min.time())
 
         # Handle special case for 'max' timeframe
         if interval == 'max':
             interval = '1d'  # Use daily data for maximum history
 
         # For intraday data, enforce date range limitations
+        current_date = datetime.now()
         if interval == '1m':
             # Yahoo finance only provides 7 days of 1-minute data
-            current_date = datetime.now()
-            start_date = max(start_date, current_date - timedelta(days=7))
+            max_days = 7
+            start_date = max(start_date, current_date - timedelta(days=max_days))
         elif interval in ['3m', '15m']:
             # Limit other intraday data to 60 days
-            current_date = datetime.now()
-            start_date = max(start_date, current_date - timedelta(days=60))
+            max_days = 60
+            start_date = max(start_date, current_date - timedelta(days=max_days))
 
         # Create Ticker object
         stock = yf.Ticker(symbol)
