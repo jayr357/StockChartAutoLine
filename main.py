@@ -16,6 +16,23 @@ def main():
     end_date = datetime.datetime.now()
     start_date = end_date - datetime.timedelta(days=365)
 
+    # Chart configuration options
+    st.sidebar.subheader("Chart Settings")
+    chart_height = st.sidebar.slider("Chart Height", 600, 1500, 900, 50)
+    price_volume_ratio = st.sidebar.slider("Price/Volume Ratio", 0.5, 0.9, 0.7, 0.1)
+    vertical_spacing = st.sidebar.slider("Chart Spacing", 0.05, 0.2, 0.1, 0.01)
+
+    # Grid style options
+    grid_color = st.sidebar.color_picker("Grid Color", "#483C32")
+    grid_width = st.sidebar.slider("Grid Width", 1, 3, 1)
+    grid_style = st.sidebar.selectbox("Grid Style", ["solid", "dot", "dash", "longdash"], index=1)
+
+    grid_config = {
+        'color': grid_color,
+        'width': grid_width,
+        'dash': grid_style
+    }
+
     # Updated timeframe selection with supported intervals
     timeframe = st.sidebar.selectbox(
         "Timeframe",
@@ -63,13 +80,17 @@ def main():
             support_resistance = calculate_support_resistance(df, timeframe)
             trend_data = calculate_trend(df, timeframe)
 
-            # Create main price chart
+            # Create main price chart with user configuration
             fig = create_price_chart(
                 df,
                 symbol,
                 support_resistance,
                 trend_data,
-                timeframe
+                timeframe,
+                chart_height=chart_height,
+                price_volume_ratio=price_volume_ratio,
+                vertical_spacing=vertical_spacing,
+                grid_style=grid_config
             )
             st.plotly_chart(fig, use_container_width=True)
 

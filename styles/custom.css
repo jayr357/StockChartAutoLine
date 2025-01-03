@@ -1,152 +1,172 @@
-/* Global styles */
+/* Steampunk Theme */
 body {
-    font-family: 'Inter', sans-serif;
+    font-family: 'Copperplate Gothic', 'Georgia', serif;
+    background-color: #1A1817;
+    color: #D4AF37;
 }
 
 /* Dark mode styles */
 @media (prefers-color-scheme: dark) {
     .stApp {
-        background-color: #0E1117;
-        color: #E6E6E6;
+        background-color: #1A1817;
+        background-image: 
+            linear-gradient(45deg, #2A2520 25%, transparent 25%),
+            linear-gradient(-45deg, #2A2520 25%, transparent 25%),
+            linear-gradient(45deg, transparent 75%, #2A2520 75%),
+            linear-gradient(-45deg, transparent 75%, #2A2520 75%);
+        background-size: 20px 20px;
+        color: #D4AF37;
     }
-    
+
     .stPlotlyChart {
-        background-color: #1E2227 !important;
+        background-color: #242021 !important;
+        border: 2px solid #B87333;
+        border-radius: 8px;
+        box-shadow: 0 0 15px rgba(184, 115, 51, 0.2);
     }
-    
+
     /* Sidebar styling */
     .css-1d391kg {
-        background-color: #1E2227;
+        background-color: #1E1B1A;
+        border-right: 2px solid #B87333;
     }
-    
+
     /* Metric cards */
     .css-1xarl3l {
-        background-color: #262B32;
+        background-color: #2A2520;
+        border: 1px solid #B87333;
         border-radius: 8px;
         padding: 1rem;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
     }
 }
 
-/* Light mode styles */
+/* Light mode styles (steampunk-inspired) */
 @media (prefers-color-scheme: light) {
     .stApp {
-        background-color: #FFFFFF;
-        color: #111111;
+        background-color: #F5E6D3;
+        background-image: 
+            linear-gradient(45deg, #E6D5C0 25%, transparent 25%),
+            linear-gradient(-45deg, #E6D5C0 25%, transparent 25%),
+            linear-gradient(45deg, transparent 75%, #E6D5C0 75%),
+            linear-gradient(-45deg, transparent 75%, #E6D5C0 75%);
+        background-size: 20px 20px;
+        color: #4A3C2C;
     }
-    
+
     .stPlotlyChart {
         background-color: #F8F9FA !important;
+        border: 2px solid #B87333;
+        border-radius: 8px;
+        box-shadow: 0 0 15px rgba(184, 115, 51, 0.1);
     }
-    
+
     /* Metric cards */
     .css-1xarl3l {
-        background-color: #F8F9FA;
+        background-color: #F5E6D3;
+        border: 1px solid #B87333;
         border-radius: 8px;
         padding: 1rem;
-        border: 1px solid #E1E4E8;
+        box-shadow: 0 4px 8px rgba(74, 60, 44, 0.1);
     }
 }
 
-/* Common styles */
+/* Common steampunk elements */
 .stButton>button {
+    border: 2px solid #B87333 !important;
     border-radius: 6px;
-    padding: 0.5rem 1rem;
+    background-color: #2A2520;
+    color: #D4AF37;
+    font-family: 'Copperplate Gothic', serif;
     font-weight: 500;
-    transition: all 0.2s ease;
+    padding: 0.5rem 1rem;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
 
 .stButton>button:hover {
-    transform: translateY(-1px);
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-}
-
-/* Metric styling */
-.css-1xarl3l {
-    margin: 0.5rem 0;
-    transition: all 0.2s ease;
-}
-
-.css-1xarl3l:hover {
     transform: translateY(-2px);
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-}
-
-/* Chart container */
-.element-container {
-    margin-top: 1rem;
-    margin-bottom: 2rem;
-}
-
-/* Plotly chart customization */
-.js-plotly-plot {
-    border-radius: 8px;
-    padding: 1rem;
-}
-
-/* Sidebar refinements */
-.css-1d391kg {
-    padding-top: 2rem;
-}
-
-.sidebar .sidebar-content {
-    padding: 2rem 1rem;
+    box-shadow: 0 6px 12px rgba(184, 115, 51, 0.3);
+    background-color: #3A3530;
 }
 
 /* Input fields */
-.stTextInput>div>div>input {
-    border-radius: 6px;
-}
-
-.stSelectbox>div>div>select {
-    border-radius: 6px;
-}
-
-/* Date picker */
+.stTextInput>div>div>input,
+.stSelectbox>div>div>select,
 .stDateInput>div>div>input {
+    background-color: #2A2520 !important;
+    border: 2px solid #B87333 !important;
     border-radius: 6px;
+    color: #D4AF37 !important;
+    font-family: 'Copperplate Gothic', serif;
 }
 
 /* Headers */
 h1, h2, h3 {
-    font-weight: 600;
-    margin-bottom: 1rem;
+    font-family: 'Copperplate Gothic', 'Georgia', serif;
+    color: #B87333;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+    border-bottom: 2px solid #B87333;
+    padding-bottom: 0.5rem;
+    margin-bottom: 1.5rem;
 }
 
-/* Error messages */
-.stAlert {
-    border-radius: 6px;
-    padding: 1rem;
-    margin: 1rem 0;
+/* Progress bars and spinners */
+.stProgress .st-bo {
+    background-color: #B87333;
 }
 
-/* Loading spinner */
 .stSpinner>div {
-    border-color: #FF4B4B transparent transparent transparent;
+    border-color: #B87333 transparent transparent transparent;
+}
+
+/* Alert/Error messages */
+.stAlert {
+    background-color: #2A2520;
+    border: 2px solid #B87333;
+    border-radius: 6px;
+    color: #D4AF37;
+    font-family: 'Copperplate Gothic', serif;
 }
 
 /* Tooltips */
 .tooltip {
     position: relative;
     display: inline-block;
+    border-bottom: 1px dotted #B87333;
 }
 
 .tooltip .tooltiptext {
-    visibility: hidden;
-    background-color: #555;
-    color: #fff;
-    text-align: center;
+    background-color: #2A2520;
+    color: #D4AF37;
+    border: 1px solid #B87333;
     border-radius: 6px;
-    padding: 5px;
-    position: absolute;
-    z-index: 1;
-    bottom: 125%;
-    left: 50%;
-    margin-left: -60px;
-    opacity: 0;
-    transition: opacity 0.3s;
+    padding: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
 }
 
-.tooltip:hover .tooltiptext {
-    visibility: visible;
-    opacity: 1;
+/* Metric value colors */
+.css-1xarl3l label {
+    color: #B87333 !important;
+}
+
+.css-1xarl3l .metric-value {
+    color: #D4AF37 !important;
+}
+
+/* Scrollbars */
+::-webkit-scrollbar {
+    width: 12px;
+    background-color: #1A1817;
+}
+
+::-webkit-scrollbar-thumb {
+    background-color: #B87333;
+    border-radius: 6px;
+    border: 3px solid #1A1817;
+}
+
+::-webkit-scrollbar-track {
+    background-color: #2A2520;
+    border-radius: 6px;
 }
