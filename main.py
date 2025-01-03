@@ -15,18 +15,34 @@ def main():
     end_date = datetime.datetime.now()
     start_date = end_date - datetime.timedelta(days=365)
 
+    # Updated timeframe selection with more options
+    timeframe = st.sidebar.selectbox(
+        "Timeframe",
+        ["1m", "3m", "15m", "1d", "1mo", "max"],
+        index=3,
+        help="1m = 1 Minute (last 7 days)\n"
+             "3m = 3 Minutes (last 60 days)\n"
+             "15m = 15 Minutes (last 60 days)\n"
+             "1d = Daily\n"
+             "1mo = Monthly\n"
+             "max = Maximum available history"
+    )
+
+    # Adjust date picker based on timeframe
+    if timeframe in ['1m']:
+        # For 1-minute data, limit to last 7 days
+        min_date = end_date - datetime.timedelta(days=7)
+        start_date = max(start_date, min_date)
+    elif timeframe in ['3m', '15m']:
+        # For intraday data, limit to last 60 days
+        min_date = end_date - datetime.timedelta(days=60)
+        start_date = max(start_date, min_date)
+
     date_range = st.sidebar.date_input(
         "Date Range",
         value=(start_date, end_date),
+        min_value=start_date if timeframe in ['1m', '3m', '15m'] else None,
         max_value=end_date
-    )
-
-    # Updated timeframe options to match yfinance supported intervals
-    timeframe = st.sidebar.selectbox(
-        "Timeframe",
-        ["1d", "1h", "5m"],
-        index=0,
-        help="1d = Daily, 1h = Hourly, 5m = 5 Minutes"
     )
 
     # Main content

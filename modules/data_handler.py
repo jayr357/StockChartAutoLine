@@ -7,6 +7,12 @@ from datetime import datetime, timedelta
 def fetch_stock_data(symbol: str, start_date, end_date, interval: str = "1d") -> pd.DataFrame:
     """
     Fetch stock data from Yahoo Finance with caching
+
+    Interval options:
+    - 1m, 3m, 15m: Intraday data with limitations
+    - 1d: Daily data
+    - 1mo: Monthly data
+    - max: Maximum available history
     """
     try:
         # Convert dates to datetime if they're not already
@@ -15,14 +21,24 @@ def fetch_stock_data(symbol: str, start_date, end_date, interval: str = "1d") ->
         if isinstance(end_date, str):
             end_date = datetime.strptime(end_date, "%Y-%m-%d")
 
-        # For intraday data (intervals < 1d), limit the date range
-        if interval in ['1m', '2m', '5m', '15m', '30m', '60m', '90m', '1h']:
-            # Yahoo finance only provides 7 days of 1-minute data
-            max_days = 7 if interval == '1m' else 60
-            current_date = datetime.now()
-            start_date = max(start_date, current_date - timedelta(days=max_days))
+        # Handle special case for 'max' timeframe
+        if interval == 'max':
+            interval = '1d'  # Use daily data for maximum history
 
+        # For intraday data, enforce date range limitations
+        if interval == '1m':
+            # Yahoo finance only provides 7 days of 1-minute data
+            current_date = datetime.now()
+            start_date = max(start_date, current_date - timedelta(days=7))
+        elif interval in ['3m', '15m']:
+            # Limit other intraday data to 60 days
+            current_date = datetime.now()
+            start_date = max(start_date, current_date - timedelta(days=60))
+
+        # Create Ticker object
         stock = yf.Ticker(symbol)
+
+        # Fetch historical data
         df = stock.history(
             start=start_date,
             end=end_date,
@@ -30,7 +46,7 @@ def fetch_stock_data(symbol: str, start_date, end_date, interval: str = "1d") ->
         )
 
         if df.empty:
-            st.warning(f"No data available for {symbol} in the selected date range.")
+            st.warning(f"No data available for {symbol} in the selected date range with {interval} interval.")
             return pd.DataFrame()
 
         return df
