@@ -56,21 +56,22 @@ def main():
             df = cache_data(symbol, start_date, end_date, timeframe)
 
         if df is not None and not df.empty:
-            # Calculate technical indicators
-            support_resistance = calculate_support_resistance(df)
-            trend_data = calculate_trend(df)
+            # Calculate technical indicators with timeframe parameter
+            support_resistance = calculate_support_resistance(df, timeframe)
+            trend_data = calculate_trend(df, timeframe)
 
             # Create main price chart
             fig = create_price_chart(
                 df,
                 symbol,
                 support_resistance,
-                trend_data
+                trend_data,
+                timeframe
             )
             st.plotly_chart(fig, use_container_width=True)
 
             # Display additional metrics
-            col1, col2, col3 = st.columns(3)
+            col1, col2, col3, col4 = st.columns(4)
             with col1:
                 st.metric(
                     "Current Price",
@@ -87,6 +88,12 @@ def main():
                     "Trend",
                     trend_data['trend']
                 )
+            with col4:
+                if 'volatility' in trend_data:
+                    st.metric(
+                        "Volatility",
+                        f"{trend_data['volatility'].iloc[-1]*100:.2f}%"
+                    )
         else:
             st.error(f"Unable to fetch data for {symbol}. Please verify the symbol and try again.")
 
