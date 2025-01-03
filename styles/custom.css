@@ -1,0 +1,152 @@
+/* Global styles */
+body {
+    font-family: 'Inter', sans-serif;
+}
+
+/* Dark mode styles */
+@media (prefers-color-scheme: dark) {
+    .stApp {
+        background-color: #0E1117;
+        color: #E6E6E6;
+    }
+    
+    .stPlotlyChart {
+        background-color: #1E2227 !important;
+    }
+    
+    /* Sidebar styling */
+    .css-1d391kg {
+        background-color: #1E2227;
+    }
+    
+    /* Metric cards */
+    .css-1xarl3l {
+        background-color: #262B32;
+        border-radius: 8px;
+        padding: 1rem;
+    }
+}
+
+/* Light mode styles */
+@media (prefers-color-scheme: light) {
+    .stApp {
+        background-color: #FFFFFF;
+        color: #111111;
+    }
+    
+    .stPlotlyChart {
+        background-color: #F8F9FA !important;
+    }
+    
+    /* Metric cards */
+    .css-1xarl3l {
+        background-color: #F8F9FA;
+        border-radius: 8px;
+        padding: 1rem;
+        border: 1px solid #E1E4E8;
+    }
+}
+
+/* Common styles */
+.stButton>button {
+    border-radius: 6px;
+    padding: 0.5rem 1rem;
+    font-weight: 500;
+    transition: all 0.2s ease;
+}
+
+.stButton>button:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+/* Metric styling */
+.css-1xarl3l {
+    margin: 0.5rem 0;
+    transition: all 0.2s ease;
+}
+
+.css-1xarl3l:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Chart container */
+.element-container {
+    margin-top: 1rem;
+    margin-bottom: 2rem;
+}
+
+/* Plotly chart customization */
+.js-plotly-plot {
+    border-radius: 8px;
+    padding: 1rem;
+}
+
+/* Sidebar refinements */
+.css-1d391kg {
+    padding-top: 2rem;
+}
+
+.sidebar .sidebar-content {
+    padding: 2rem 1rem;
+}
+
+/* Input fields */
+.stTextInput>div>div>input {
+    border-radius: 6px;
+}
+
+.stSelectbox>div>div>select {
+    border-radius: 6px;
+}
+
+/* Date picker */
+.stDateInput>div>div>input {
+    border-radius: 6px;
+}
+
+/* Headers */
+h1, h2, h3 {
+    font-weight: 600;
+    margin-bottom: 1rem;
+}
+
+/* Error messages */
+.stAlert {
+    border-radius: 6px;
+    padding: 1rem;
+    margin: 1rem 0;
+}
+
+/* Loading spinner */
+.stSpinner>div {
+    border-color: #FF4B4B transparent transparent transparent;
+}
+
+/* Tooltips */
+.tooltip {
+    position: relative;
+    display: inline-block;
+}
+
+.tooltip .tooltiptext {
+    visibility: hidden;
+    background-color: #555;
+    color: #fff;
+    text-align: center;
+    border-radius: 6px;
+    padding: 5px;
+    position: absolute;
+    z-index: 1;
+    bottom: 125%;
+    left: 50%;
+    margin-left: -60px;
+    opacity: 0;
+    transition: opacity 0.3s;
+}
+
+.tooltip:hover .tooltiptext {
+    visibility: visible;
+    opacity: 1;
+}
